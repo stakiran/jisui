@@ -234,11 +234,15 @@ def main():
             else:
                 print("[ERROR] キャプチャに失敗しました")
 
-    with keyboard.Listener(on_press=on_press) as listener:
-        try:
-            listener.join()
-        except KeyboardInterrupt:
-            print("\n終了します")
+    listener = keyboard.Listener(on_press=on_press)
+    listener.start()
+    try:
+        while listener.is_alive():
+            listener.join(timeout=0.5)
+    except KeyboardInterrupt:
+        print("\n終了します")
+    finally:
+        listener.stop()
 
 
 if __name__ == "__main__":
